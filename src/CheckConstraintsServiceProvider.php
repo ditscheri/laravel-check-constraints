@@ -4,9 +4,7 @@ namespace Ditscheri\CheckConstraints;
 
 use Ditscheri\CheckConstraints\Commands\CheckConstraintsCommand;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\ForeignIdColumnDefinition;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
@@ -56,7 +54,8 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         MySqlGrammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
             /** @var MySqlGrammar $this */
-            return sprintf('alter table %s add constraint %s check (%s)',
+            return sprintf(
+                'alter table %s add constraint %s check (%s)',
                 $this->wrapTable($blueprint),
                 $this->wrap($command->constraint),
                 $command->expression,
