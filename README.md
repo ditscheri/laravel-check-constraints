@@ -1,19 +1,11 @@
-# This is my package laravel-check-constraints
+# Add check constraints to your Laravel schema
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ditscheri/laravel-check-constraints.svg?style=flat-square)](https://packagist.org/packages/ditscheri/laravel-check-constraints)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/ditscheri/laravel-check-constraints/run-tests?label=tests)](https://github.com/ditscheri/laravel-check-constraints/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/ditscheri/laravel-check-constraints/Check%20&%20fix%20styling?label=code%20style)](https://github.com/ditscheri/laravel-check-constraints/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/ditscheri/laravel-check-constraints.svg?style=flat-square)](https://packagist.org/packages/ditscheri/laravel-check-constraints)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-check-constraints.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-check-constraints)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+This packages adds macros to the schema builder, which allow you to add check constraints to your databse tables. Currently, the package only supports the MySQL driver.
 
 ## Installation
 
@@ -23,38 +15,52 @@ You can install the package via composer:
 composer require ditscheri/laravel-check-constraints
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-check-constraints-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-check-constraints-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-check-constraints-views"
-```
-
 ## Usage
 
 ```php
-$checkConstraints = new Ditscheri\CheckConstraints();
-echo $checkConstraints->echoPhrase('Hello, Ditscheri!');
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedInteger('age');
+
+    // This is what the package allows you to do:
+    $table->check('age >= 21');
+});
 ```
+
+Now you have an additional layer of integrity checks within your database. If you try to insert or update a row, that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
+
+```php
+// This is fine:
+User::create(['age' => 30]); 
+
+// This is not:
+User::create(['age' => 18]); 
+/* 
+Illuminate\Database\QueryException with message
+SQLSTATE[HY000]: General error: 3819 
+Check constraint 'users_age_21_check' is violated.
+*/
+```
+
+Typical use cases for checks are date ranges, where the end date may not be before the start date, or prices with discounts:
+
+```php
+Schema::create('events', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->datetime('starts_at');
+    $table->datetime('ends_at');
+    $table->unsignedInteger('price');
+    $table->unsignedInteger('discounted_price');
+
+    // Ensure that date ranges are valid (may not end before it even started)
+    $table->check('starts_at <= ends_at');
+    // Ensure that discounts are lower than the regular price:
+    $table->check('discounted_price <= price', 'check_valid_discounts');
+});
+```
+
+Of course you will still want to validate your data and detect such things inside of your application code before even reaching out to the database. But sometimes it is useful, to add additional integrity checks right on the database layer itself. 
 
 ## Testing
 
