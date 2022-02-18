@@ -19,7 +19,7 @@ composer require ditscheri/laravel-check-constraints
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-check-constraints-config"
+php artisan vendor:publish --tag="check-constraints-config"
 ```
 
 This is the contents of the published config file:
