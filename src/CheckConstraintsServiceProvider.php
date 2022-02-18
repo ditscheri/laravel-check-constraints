@@ -2,9 +2,9 @@
 
 namespace Ditscheri\CheckConstraints;
 
+use Ditscheri\CheckConstraints\Commands\CheckConstraintsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Ditscheri\CheckConstraints\Commands\CheckConstraintsCommand;
 
 class CheckConstraintsServiceProvider extends PackageServiceProvider
 {

@@ -2,9 +2,9 @@
 
 namespace Ditscheri\CheckConstraints\Tests;
 
+use Ditscheri\CheckConstraints\CheckConstraintsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Ditscheri\CheckConstraints\CheckConstraintsServiceProvider;
 
 class TestCase extends Orchestra
 {
