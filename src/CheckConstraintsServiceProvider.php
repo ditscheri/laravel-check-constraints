@@ -2,7 +2,6 @@
 
 namespace Ditscheri\CheckConstraints;
 
-use Ditscheri\CheckConstraints\Commands\CheckConstraintsCommand;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use Illuminate\Support\Fluent;
@@ -14,17 +13,7 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
-        $package
-            ->name('laravel-check-constraints')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-check-constraints_table')
-            ->hasCommand(CheckConstraintsCommand::class);
+        $package->name('laravel-check-constraints');
     }
 
     public function packageRegistered()
