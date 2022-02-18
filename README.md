@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/ditscheri/laravel-check-constraints/Check%20&%20fix%20styling?label=code%20style)](https://github.com/ditscheri/laravel-check-constraints/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/ditscheri/laravel-check-constraints.svg?style=flat-square)](https://packagist.org/packages/ditscheri/laravel-check-constraints)
 
-This packages adds macros to the schema builder, which allow you to add check constraints to your databse tables. Currently, the package only supports the MySQL driver.
+This packages adds macros to the schema builder, which allow you to add check constraints to your databse tables.
 
 ## Installation
 
@@ -32,7 +32,7 @@ return [
 ];
 ```
 
-Since SQLite comes with a number of limitations, this package currently does not support SQLite at all. You can use the abvove configuration to decide wether to throw a `RuntimeException` when used with SQLite or wether to fail silently.
+Since SQLite comes with a number of limitations, this package currently does not support SQLite at all. You can use the above setting to configure wether to throw a `RuntimeException` or to fail silently when using SQLite.
 
 If you only use SQLite in your tests, you might be fine with setting the option to `false`.
 
@@ -48,7 +48,7 @@ Schema::create('users', function (Blueprint $table) {
 });
 ```
 
-Now you have an additional layer of integrity checks within your database. If you try to insert or update a row, that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
+Now you have an additional layer of integrity checks right in your database. If you try to insert or update a row that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
 
 ```php
 // This is fine:
@@ -63,7 +63,7 @@ Check constraint 'users_age_21_check' is violated.
 */
 ```
 
-Typical use cases for checks are date ranges, where the end date may not be before the start date, or prices with discounts:
+Typical use cases for such checks are date ranges, where the end date may not be before the start date, or prices with discounts:
 
 ```php
 Schema::create('events', function (Blueprint $table) {
@@ -81,7 +81,7 @@ Schema::create('events', function (Blueprint $table) {
 });
 ```
 
-Of course you will still want to validate your data and detect such things inside of your application code before even reaching out to the database. But sometimes it is useful, to add additional integrity checks right on the database layer itself. 
+Of course you will still want to validate your data within the application code and detect such things before even reaching out to the database. But sometimes it is useful to add additional integrity checks right on the database layer itself. 
 
 ## Testing
 
