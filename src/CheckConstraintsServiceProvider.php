@@ -2,7 +2,6 @@
 
 namespace Ditscheri\CheckConstraints;
 
-use Ditscheri\CheckConstraints\Commands\CheckConstraintsCommand;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use Illuminate\Support\Fluent;
@@ -14,21 +13,15 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
-        $package
-            ->name('laravel-check-constraints')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-check-constraints_table')
-            ->hasCommand(CheckConstraintsCommand::class);
+        $package->name('laravel-check-constraints');
     }
 
     public function packageRegistered()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         Blueprint::macro('check', function (string $expression, ?string $constraint = null) {
             /** @var Blueprint $this */
             $constraint = $constraint ?: $this->createCheckName($expression);
@@ -45,11 +38,10 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         Blueprint::macro('createCheckName', function (string $expression) {
             /** @var Blueprint $this */
-            return Str::of("{$this->prefix}{$this->table}_{$expression}_check")
+            return (string) Str::of("{$this->prefix}{$this->table}_{$expression}_check")
                 ->replaceMatches('#[\W_]+#', '_')
                 ->trim('_')
-                ->lower()
-                ->value();
+                ->lower();
         });
 
         MySqlGrammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {

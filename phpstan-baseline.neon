@@ -1,0 +1,32 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$constraint\\.$#"
+			count: 1
+			path: src/CheckConstraintsServiceProvider.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$constraints\\.$#"
+			count: 1
+			path: src/CheckConstraintsServiceProvider.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$expression\\.$#"
+			count: 1
+			path: src/CheckConstraintsServiceProvider.php
+
+		-
+			message: "#^Access to protected property Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:\\$prefix\\.$#"
+			count: 1
+			path: src/CheckConstraintsServiceProvider.php
+
+		-
+			message: "#^Access to protected property Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:\\$table\\.$#"
+			count: 1
+			path: src/CheckConstraintsServiceProvider.php
+
+		-
+			message: "#^Call to protected method addCommand\\(\\) of class Illuminate\\\\Database\\\\Schema\\\\Blueprint\\.$#"
+			count: 2
+			path: src/CheckConstraintsServiceProvider.php
+
