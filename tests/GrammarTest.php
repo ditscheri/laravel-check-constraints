@@ -31,13 +31,13 @@ it('can create tables with checks', function () {
     $this->assertEquals([
         'create table "users" ("age" integer not null)',
         'alter table "users" add constraint "min_age_check" check (age>21)',
-    ], $blueprint->toSql($connection, new PostgresGrammar));
+    ], $blueprint->toSql($connection, new PostgresGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'create table "users" ("age" int not null)',
         'alter table "users" add constraint "min_age_check" check (age>21)',
-    ], $blueprint->toSql($connection, new SqlServerGrammar));
+    ], $blueprint->toSql($connection, new SqlServerGrammar()));
 });
 
 it('can add checks to existing tables', function () {
@@ -55,12 +55,12 @@ it('can add checks to existing tables', function () {
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" add constraint "min_age_check" check (age>21)',
-    ], $blueprint->toSql($connection, new PostgresGrammar));
+    ], $blueprint->toSql($connection, new PostgresGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" add constraint "min_age_check" check (age>21)',
-    ], $blueprint->toSql($connection, new SqlServerGrammar));
+    ], $blueprint->toSql($connection, new SqlServerGrammar()));
 });
 
 it('can drop check constraints', function () {
@@ -73,17 +73,17 @@ it('can drop check constraints', function () {
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table `users` drop constraint `min_age_check`',
-    ], $blueprint->toSql($connection, new MySqlGrammar));
+    ], $blueprint->toSql($connection, new MySqlGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" drop constraint "min_age_check"',
-    ], $blueprint->toSql($connection, new PostgresGrammar));
+    ], $blueprint->toSql($connection, new PostgresGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" drop constraint "min_age_check"',
-    ], $blueprint->toSql($connection, new SqlServerGrammar));
+    ], $blueprint->toSql($connection, new SqlServerGrammar()));
 });
 
 it('can drop multiple check constraints', function () {
@@ -96,20 +96,20 @@ it('can drop multiple check constraints', function () {
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table `users` drop constraint `min_age_check`, drop constraint `max_age_check`',
-    ], $blueprint->toSql($connection, new MySqlGrammar));
+    ], $blueprint->toSql($connection, new MySqlGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" drop constraint "min_age_check", drop constraint "max_age_check"',
-    ], $blueprint->toSql($connection, new PostgresGrammar));
+    ], $blueprint->toSql($connection, new PostgresGrammar()));
 
     $blueprint = clone $base;
     $this->assertEquals([
         'alter table "users" drop constraint "min_age_check", drop constraint "max_age_check"',
-    ], $blueprint->toSql($connection, new SqlServerGrammar));
+    ], $blueprint->toSql($connection, new SqlServerGrammar()));
 });
 
-it('throws exception for SQLite for create table', function() {
+it('throws exception for SQLite for create table', function () {
     config()->set('check-constraints.sqlite.throw', true);
 
     $connection = m::mock(Connection::class);
@@ -120,10 +120,10 @@ it('throws exception for SQLite for create table', function() {
 
     $this->expectException(RuntimeException::class);
 
-    $base->toSql($connection, new SQLiteGrammar);
+    $base->toSql($connection, new SQLiteGrammar());
 });
 
-it('throws exception for SQLite for alter table', function() {
+it('throws exception for SQLite for alter table', function () {
     config()->set('check-constraints.sqlite.throw', true);
 
     $connection = m::mock(Connection::class);
@@ -133,10 +133,10 @@ it('throws exception for SQLite for alter table', function() {
 
     $this->expectException(RuntimeException::class);
 
-    $base->toSql($connection, new SQLiteGrammar);
+    $base->toSql($connection, new SQLiteGrammar());
 });
 
-it('throws exception for SQLite for dropCheck', function() {
+it('throws exception for SQLite for dropCheck', function () {
     config()->set('check-constraints.sqlite.throw', true);
 
     $connection = m::mock(Connection::class);
@@ -146,10 +146,10 @@ it('throws exception for SQLite for dropCheck', function() {
 
     $this->expectException(RuntimeException::class);
 
-    $base->toSql($connection, new SQLiteGrammar);
+    $base->toSql($connection, new SQLiteGrammar());
 });
 
-it('can fail silently for SQLite via config', function() {
+it('can fail silently for SQLite via config', function () {
     config()->set('check-constraints.sqlite.throw', false);
 
     $connection = m::mock(Connection::class);
@@ -161,7 +161,7 @@ it('can fail silently for SQLite via config', function() {
     $blueprint->check('age>21', 'min_age_check');
     $this->assertEquals([
         'create table "users" ("age" integer not null)',
-    ], $blueprint->toSql($connection, new SQLiteGrammar));
+    ], $blueprint->toSql($connection, new SQLiteGrammar()));
 
     // alter table with check and column:
     $blueprint = new Blueprint('users');
@@ -169,20 +169,19 @@ it('can fail silently for SQLite via config', function() {
     $blueprint->check('age>21', 'min_age_check');
     $this->assertEquals([
         'alter table "users" add column "age" integer not null',
-    ], $blueprint->toSql($connection, new SQLiteGrammar));
+    ], $blueprint->toSql($connection, new SQLiteGrammar()));
 
     // alter table with check only:
     $blueprint = new Blueprint('users');
     $blueprint->check('age>21', 'min_age_check');
     $this->assertEquals([
         // empty array
-    ], $blueprint->toSql($connection, new SQLiteGrammar));
+    ], $blueprint->toSql($connection, new SQLiteGrammar()));
 
     // dropCheck:
     $blueprint = new Blueprint('users');
     $blueprint->dropCheck('min_age_check');
     $this->assertEquals([
         // empty array
-    ], $blueprint->toSql($connection, new SQLiteGrammar));
+    ], $blueprint->toSql($connection, new SQLiteGrammar()));
 });
-

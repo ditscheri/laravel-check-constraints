@@ -49,7 +49,7 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         Grammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
             /** @var Grammar $this */
-            if($this instanceof SQLiteGrammar) {
+            if ($this instanceof SQLiteGrammar) {
                 return $this->handleInvalidCheckConstraintDriver();
             }
 
@@ -63,7 +63,7 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         Grammar::macro('compileDropCheck', function (Blueprint $blueprint, Fluent $command) {
             /** @var Grammar $this */
-            if($this instanceof SQLiteGrammar) {
+            if ($this instanceof SQLiteGrammar) {
                 return $this->handleInvalidCheckConstraintDriver();
             }
 
@@ -73,7 +73,7 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
         });
         Grammar::macro('handleInvalidCheckConstraintDriver', function () {
             /** @var Grammar $this */
-            if(config('check-constraints.sqlite.throw', true)) {
+            if (config('check-constraints.sqlite.throw', true)) {
                 throw new \RuntimeException('SQLite driver does not support check constraints.');
             }
 
@@ -89,7 +89,5 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
         //     /** @var SQLiteGrammar $this */
         //     throw new \RuntimeException('SQLite driver does not support check constraints.');
         // });
-
-
     }
 }
