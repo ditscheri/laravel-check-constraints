@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/ditscheri/laravel-check-constraints/Check%20&%20fix%20styling?label=code%20style)](https://github.com/ditscheri/laravel-check-constraints/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/ditscheri/laravel-check-constraints.svg?style=flat-square)](https://packagist.org/packages/ditscheri/laravel-check-constraints)
 
-This packages adds macros to the schema builder, which allow you to add check constraints to your databse tables.
+This packages adds macros to the schema builder, which allow you to add check constraints to your database tables.
 
 ## Installation
 
