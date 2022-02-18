@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Ditscheri\CheckConstraints\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class CheckConstraintsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-check-constraints';
 
     public $description = 'My command';
 
