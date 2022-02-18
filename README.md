@@ -15,6 +15,27 @@ You can install the package via composer:
 composer require ditscheri/laravel-check-constraints
 ```
 
+
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="laravel-check-constraints-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+    'sqlite' => [
+        'throw' => true,
+    ],
+];
+```
+
+Since SQLite comes with a number of limitations, this package currently does not support SQLite at all. You can use the abvove configuration to decide wether to throw a `RuntimeException` when used with SQLite or wether to fail silently.
+
+If you only use SQLite in your tests, you might be fine with setting the option to `false`.
+
 ## Usage
 
 ```php

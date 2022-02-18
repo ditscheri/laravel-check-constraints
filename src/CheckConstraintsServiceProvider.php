@@ -3,7 +3,8 @@
 namespace Ditscheri\CheckConstraints;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Grammars\MySqlGrammar;
+use Illuminate\Database\Schema\Grammars\Grammar;
+use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
@@ -13,7 +14,9 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        $package->name('laravel-check-constraints');
+        $package
+            ->name('laravel-check-constraints')
+            ->hasConfigFile();
     }
 
     public function packageRegistered()
@@ -44,8 +47,12 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
                 ->lower();
         });
 
-        MySqlGrammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
-            /** @var MySqlGrammar $this */
+        Grammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
+            /** @var Grammar $this */
+            if($this instanceof SQLiteGrammar) {
+                return $this->handleInvalidCheckConstraintDriver();
+            }
+
             return sprintf(
                 'alter table %s add constraint %s check (%s)',
                 $this->wrapTable($blueprint),
@@ -54,11 +61,35 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
             );
         });
 
-        MySqlGrammar::macro('compileDropCheck', function (Blueprint $blueprint, Fluent $command) {
-            /** @var MySqlGrammar $this */
+        Grammar::macro('compileDropCheck', function (Blueprint $blueprint, Fluent $command) {
+            /** @var Grammar $this */
+            if($this instanceof SQLiteGrammar) {
+                return $this->handleInvalidCheckConstraintDriver();
+            }
+
             $constraints = $this->prefixArray('drop constraint', $this->wrapArray($command->constraints));
 
             return 'alter table '.$this->wrapTable($blueprint).' '.implode(', ', $constraints);
         });
+        Grammar::macro('handleInvalidCheckConstraintDriver', function () {
+            /** @var Grammar $this */
+            if(config('check-constraints.sqlite.throw', true)) {
+                throw new \RuntimeException('SQLite driver does not support check constraints.');
+            }
+
+            return null;
+        });
+
+        // SQLiteGrammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
+        //     /** @var SQLiteGrammar $this */
+        //     throw new \RuntimeException('SQLite driver does not support check constraints.');
+        // });
+
+        // SQLiteGrammar::macro('compileDropCheck', function (Blueprint $blueprint, Fluent $command) {
+        //     /** @var SQLiteGrammar $this */
+        //     throw new \RuntimeException('SQLite driver does not support check constraints.');
+        // });
+
+
     }
 }
