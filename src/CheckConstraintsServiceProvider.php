@@ -38,11 +38,10 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         Blueprint::macro('createCheckName', function (string $expression) {
             /** @var Blueprint $this */
-            return Str::of("{$this->prefix}{$this->table}_{$expression}_check")
+            return (string) Str::of("{$this->prefix}{$this->table}_{$expression}_check")
                 ->replaceMatches('#[\W_]+#', '_')
                 ->trim('_')
-                ->lower()
-                ->value();
+                ->lower();
         });
 
         MySqlGrammar::macro('compileCheck', function (Blueprint $blueprint, Fluent $command) {
