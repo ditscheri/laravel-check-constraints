@@ -18,6 +18,10 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         Blueprint::macro('check', function (string $expression, ?string $constraint = null) {
             /** @var Blueprint $this */
             $constraint = $constraint ?: $this->createCheckName($expression);
