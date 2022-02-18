@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-check-constraints` will be documented in this file.
 
+## v0.0.4 - 2022-02-18
+
+- experimental release
+
 ## v0.0.3 - 2022-02-18
 
 - experimental release
