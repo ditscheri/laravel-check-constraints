@@ -1,6 +1,6 @@
 {
     "name": "ditscheri/laravel-check-constraints",
-    "description": "This is my package laravel-check-constraints",
+    "description": "Add check constraints to your Laravel schema.",
     "keywords": [
         "ditscheri",
         "laravel",
