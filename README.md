@@ -5,7 +5,11 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/ditscheri/laravel-check-constraints/Check%20&%20fix%20styling?label=code%20style)](https://github.com/ditscheri/laravel-check-constraints/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/ditscheri/laravel-check-constraints.svg?style=flat-square)](https://packagist.org/packages/ditscheri/laravel-check-constraints)
 
-This packages adds macros to the schema builder, which allow you to add check constraints to your database tables.
+This packages allows you to add native check constraints to your database tables. 
+
+You can read more about check constraints in the official documentations of [MySQL](https://dev.mysql.com/doc/refman/8.0/en/create-table-check-constraints.html), [PostrgeSQL](https://www.postgresql.org/docs/14/ddl-constraints.html), [SQLite](https://www.sqlite.org/lang_createtable.html#check_constraints) and [SQL Server](https://docs.microsoft.com/en-us/sql/relational-databases/tables/unique-constraints-and-check-constraints?view=sql-server-ver15#Check).
+
+Currently, this package does not add check constraints to the SQLite driver, but you should be fine if you only use SQLite for running tests (see below).
 
 ## Installation
 
@@ -14,25 +18,6 @@ You can install the package via composer:
 ```bash
 composer require ditscheri/laravel-check-constraints
 ```
-
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="check-constraints-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-    'sqlite' => [
-        'throw' => true,
-    ],
-];
-```
-
-See below for a note about the unsupported SQLite driver.
 
 ## Usage
 
@@ -53,14 +38,14 @@ That last statement will produce the following SQL:
 alter table `events` add constraint `events_starts_at_ends_at_check` check (starts_at < ends_at);
 ```
 
-Now your database will only allow inserts and updates of rows with valid date ranges. 
+Now your database will only allow inserts and updates for rows with a valid date range. 
 
-This gives you an additional layer of integrity checks right in your database. If you try to insert or update a row that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
+If you try to insert or update a row that violates the check, an `\Illuminate\Database\QueryException` will be thrown:
 
 ```php
-Event::first->update([
+Event::first()->update([
     'starts_at' => '2022-02-19 20:00:00',
-    'end_at'    => '2022-02-19 18:00:00', // ends before it even started?!
+    'end_at'    => '2022-02-19 18:00:00', // this one would be over before it even started?!
 ]); 
  
 // Illuminate\Database\QueryException with message
@@ -82,13 +67,35 @@ Schema::create('products', function (Blueprint $table) {
 });
 ```
 
-Of course you will still want to validate your data within the application code and detect such things before even reaching out to the database. But sometimes it is useful to add additional integrity checks right on the database layer itself. 
+Of course you will still want to validate your data within the application code and detect such things before even reaching out to the database. But sometimes it is useful to have an additional layer of integrity checks right in your database itself. 
 
-Especially when you *read* data back from your database, your code may now savly assume that all the defined checks are guaranteed.
+Especially when you *read* data back from your database, your code may now safely assume that all the defined checks are guaranteed.
 
-## A note about the unsupported SQLite Driver
+You can also add checks to existing tables:
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->check('age > 18');
+});
+```
 
-SQLite does support check constraints within `create table` statements, but there are a some limitions:
+Use the second parameter for an optional custom constraint name:
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->check('age > 18', 'require_min_age');
+    $table->check('is_admin=1 OR company_id IS NOT NULL', 'non_admins_require_company');
+});
+```
+
+You can drop check constraints by their name:
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->dropCheck('require_min_age');
+});
+```
+
+## A note about SQLite
+
+While SQLite does support check constraints within `create table` statements, there are a number of limitions:
 
 - SQLite cannot add check constraints to existing tables.
 - SQLite cannot drop check constraints.
@@ -97,7 +104,25 @@ Since this package only relies on macros, it currently does not support the SQLi
 
 Instead, you can use the config `check-constraints.sqlite.throw` to define wether to throw a `RuntimeException` or to fail silently when using SQLite.
 
-If you only use SQLite in your tests, you might be fine with setting the option to `false`.
+If you only use SQLite in your tests, you might be fine with setting the option to `false`. This gives you all the benefits of check constraints for your production environment, while your tests can still run using SQLite, where the calls to `$table->check()` will just be skipped.
+
+## Configuration 
+
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="check-constraints-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+    'sqlite' => [
+        'throw' => true,
+    ],
+];
+```
 
 ## Testing
 
