@@ -32,38 +32,9 @@ return [
 ];
 ```
 
-Since SQLite comes with a number of limitations, this package currently does not support SQLite at all. You can use the above setting to configure wether to throw a `RuntimeException` or to fail silently when using SQLite.
-
-If you only use SQLite in your tests, you might be fine with setting the option to `false`.
+See below for a note about the unsupported SQLite driver.
 
 ## Usage
-
-```php
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->unsignedInteger('age');
-
-    // This is what the package allows you to do:
-    $table->check('age >= 21');
-});
-```
-
-Now you have an additional layer of integrity checks right in your database. If you try to insert or update a row that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
-
-```php
-// This is fine:
-User::create(['age' => 30]); 
-
-// This is not:
-User::create(['age' => 18]); 
-/* 
-Illuminate\Database\QueryException with message
-SQLSTATE[HY000]: General error: 3819 
-Check constraint 'users_age_21_check' is violated.
-*/
-```
-
-Typical use cases for such checks are date ranges, where the end date may not be before the start date, or prices with discounts:
 
 ```php
 Schema::create('events', function (Blueprint $table) {
@@ -71,17 +42,62 @@ Schema::create('events', function (Blueprint $table) {
     $table->string('name');
     $table->datetime('starts_at');
     $table->datetime('ends_at');
+
+    // This is the new part:
+    $table->check('starts_at < ends_at');
+});
+```
+
+That last statement will produce the following SQL:
+```sql
+alter table `events` add constraint `events_starts_at_ends_at_check` check (starts_at < ends_at);
+```
+
+Now your database will only allow inserts and updates of rows with valid date ranges. 
+
+This gives you an additional layer of integrity checks right in your database. If you try to insert or update a row that violates the checks, an `\Illuminate\Database\QueryException` will be thrown:
+
+```php
+Event::first->update([
+    'starts_at' => '2022-02-19 20:00:00',
+    'end_at'    => '2022-02-19 18:00:00', // ends before it even started?!
+]); 
+ 
+// Illuminate\Database\QueryException with message
+// SQLSTATE[HY000]: General error: 3819 
+// Check constraint 'events_starts_at_ends_at_check' is violated.
+```
+
+Another simple yet typical use case is with prices and discounts:
+
+```php
+Schema::create('products', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
     $table->unsignedInteger('price');
     $table->unsignedInteger('discounted_price');
 
-    // Ensure that date ranges are valid (may not end before it even started)
-    $table->check('starts_at <= ends_at');
     // Ensure that discounts are lower than the regular price:
-    $table->check('discounted_price <= price', 'check_valid_discounts');
+    $table->check('discounted_price <= price');
 });
 ```
 
 Of course you will still want to validate your data within the application code and detect such things before even reaching out to the database. But sometimes it is useful to add additional integrity checks right on the database layer itself. 
+
+Especially when you *read* data back from your database, your code may now savly assume that all the defined checks are guaranteed.
+
+## A note about the unsupported SQLite Driver
+
+SQLite does support check constraints within `create table` statements, but there are a some limitions:
+
+- SQLite cannot add check constraints to existing tables.
+- SQLite cannot drop check constraints.
+
+Since this package only relies on macros, it currently does not support the SQLite driver at all.
+
+Instead, you can use the config `check-constraints.sqlite.throw` to define wether to throw a `RuntimeException` or to fail silently when using SQLite.
+
+If you only use SQLite in your tests, you might be fine with setting the option to `false`.
 
 ## Testing
 
