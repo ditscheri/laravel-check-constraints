@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-check-constraints` will be documented in this file.
 
+## v0.0.8 - 2026-01-15
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot[bot] in https://github.com/ditscheri/laravel-check-constraints/pull/17
+* Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot[bot] in https://github.com/ditscheri/laravel-check-constraints/pull/18
+* Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot[bot] in https://github.com/ditscheri/laravel-check-constraints/pull/19
+* Bump actions/checkout from 2 to 4 by @dependabot[bot] in https://github.com/ditscheri/laravel-check-constraints/pull/20
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot[bot] in https://github.com/ditscheri/laravel-check-constraints/pull/21
+* add laravel 11 by @dbakan in https://github.com/ditscheri/laravel-check-constraints/pull/24
+
+**Full Changelog**: https://github.com/ditscheri/laravel-check-constraints/compare/v0.0.7...v0.0.8
+
 ## v0.0.7 - 2023-04-07
 
 - experimental release
