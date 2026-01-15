@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-check-constraints` will be documented in this file.
 
+## v0.0.9 - 2026-01-15
+
+### What's Changed
+
+* laravel 12 only by @dbakan in https://github.com/ditscheri/laravel-check-constraints/pull/25
+
+**Full Changelog**: https://github.com/ditscheri/laravel-check-constraints/compare/v0.0.8...v0.0.9
+
 ## v0.0.8 - 2026-01-15
 
 ### What's Changed
