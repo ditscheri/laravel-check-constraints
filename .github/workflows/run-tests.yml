@@ -13,23 +13,14 @@ jobs:
       fail-fast: true
       matrix:
         php: [8.4, 8.3, 8.2]
-        laravel: [12.*, 11.*, 10.*]
+        laravel: [12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 12.*
             testbench: 10.*
             larastan: 3.*
-          - laravel: 11.*
-            testbench: 9.*
-            larastan: 2.*
-          - laravel: 10.*
-            testbench: 8.*
-            larastan: 2.*
         exclude:
           - laravel: 12.*
-            php: 8.2
-            stability: prefer-lowest
-          - laravel: 11.*
             php: 8.2
             stability: prefer-lowest
 
