@@ -127,6 +127,7 @@ it('throws exception for SQLite for alter table', function () {
     config()->set('check-constraints.sqlite.throw', true);
 
     $connection = m::mock(Connection::class);
+    $connection->shouldReceive('getServerVersion')->andReturn('0.0');
 
     $base = new Blueprint('users');
     $base->check('age>21', 'min_age_check');
@@ -140,6 +141,7 @@ it('throws exception for SQLite for dropCheck', function () {
     config()->set('check-constraints.sqlite.throw', true);
 
     $connection = m::mock(Connection::class);
+    $connection->shouldReceive('getServerVersion')->andReturn('0.0');
 
     $base = new Blueprint('users');
     $base->dropCheck('min_age_check');
@@ -153,6 +155,7 @@ it('can fail silently for SQLite via config', function () {
     config()->set('check-constraints.sqlite.throw', false);
 
     $connection = m::mock(Connection::class);
+    $connection->shouldReceive('getServerVersion')->andReturn('0.0');
 
     // create table with check:
     $blueprint = new Blueprint('users');
