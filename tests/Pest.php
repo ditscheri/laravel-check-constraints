@@ -3,7 +3,6 @@
 use Ditscheri\CheckConstraints\Tests\TestCase;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Grammars\Grammar;
 use Mockery as m;
 
 uses(TestCase::class)->in(__DIR__);
