@@ -1,42 +1,44 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$constraint\\.$#"
+			message: '#^Access to an undefined property Illuminate\\Support\\Fluent\:\:\$constraint\.$#'
+			identifier: property.notFound
 			count: 1
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$constraints\\.$#"
+			message: '#^Access to an undefined property Illuminate\\Support\\Fluent\:\:\$constraints\.$#'
+			identifier: property.notFound
 			count: 1
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Support\\\\Fluent\\:\\:\\$expression\\.$#"
+			message: '#^Access to an undefined property Illuminate\\Support\\Fluent\:\:\$expression\.$#'
+			identifier: property.notFound
 			count: 1
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Access to protected property Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:\\$prefix\\.$#"
+			message: '#^Access to protected property Illuminate\\Database\\Schema\\Blueprint\:\:\$table\.$#'
+			identifier: property.protected
 			count: 1
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Access to protected property Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:\\$table\\.$#"
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\Blueprint\:\:createCheckName\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Schema\\\\Blueprint\\:\\:createCheckName\\(\\)\\.$#"
-			count: 1
-			path: src/CheckConstraintsServiceProvider.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Schema\\\\Grammars\\\\SQLiteGrammar\\:\\:handleInvalidCheckConstraintDriver\\(\\)\\.$#"
+			message: '#^Call to an undefined method Illuminate\\Database\\Schema\\Grammars\\SQLiteGrammar\:\:handleInvalidCheckConstraintDriver\(\)\.$#'
+			identifier: method.notFound
 			count: 2
 			path: src/CheckConstraintsServiceProvider.php
 
 		-
-			message: "#^Call to protected method addCommand\\(\\) of class Illuminate\\\\Database\\\\Schema\\\\Blueprint\\.$#"
+			message: '#^Call to protected method addCommand\(\) of class Illuminate\\Database\\Schema\\Blueprint\.$#'
+			identifier: method.protected
 			count: 2
 			path: src/CheckConstraintsServiceProvider.php
 

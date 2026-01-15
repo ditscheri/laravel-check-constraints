@@ -5,6 +5,7 @@ namespace Ditscheri\CheckConstraints;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
@@ -41,7 +42,7 @@ class CheckConstraintsServiceProvider extends PackageServiceProvider
 
         Blueprint::macro('createCheckName', function (string $expression) {
             /** @var Blueprint $this */
-            return (string) Str::of("{$this->prefix}{$this->table}_{$expression}_check")
+            return (string) Str::of(DB::getTablePrefix()."{$this->table}_{$expression}_check")
                 ->replaceMatches('#[\W_]+#', '_')
                 ->trim('_')
                 ->lower();
