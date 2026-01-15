@@ -12,31 +12,28 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.2, 8.1, 8.0]
-        laravel: [10.*, 9.*, 8.*]
+        php: [8.4, 8.3, 8.2]
+        laravel: [12.*, 11.*, 10.*]
         stability: [prefer-lowest, prefer-stable]
         include:
+          - laravel: 12.*
+            testbench: 10.*
+            larastan: 3.*
+          - laravel: 11.*
+            testbench: 9.*
+            larastan: 2.*
           - laravel: 10.*
             testbench: 8.*
             larastan: 2.*
-          - laravel: 9.*
-            testbench: 7.*
-            larastan: 2.*
-          - laravel: 8.*
-            testbench: 6.23
-            larastan: 1.*
         exclude:
-          -   laravel: 10.*
-              php: 8.0
-          -   laravel: 9.*
-              php: 8.2
-              stability: prefer-lowest
-          -   laravel: 8.*
-              php: 8.2
-              stability: prefer-lowest
+          - laravel: 12.*
+            php: 8.2
+            stability: prefer-lowest
+          - laravel: 11.*
+            php: 8.2
+            stability: prefer-lowest
 
-
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.larastan }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.larastan }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -57,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require --dev "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/larastan:${{ matrix.larastan }}" --no-interaction --no-update
+          composer require --dev "orchestra/testbench:${{ matrix.testbench }}" "larastan/larastan:${{ matrix.larastan }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
